@@ -1,6 +1,7 @@
 services:
   node:
-    image: node:20-alpine
+    container_name: node
+    build: ./nestjs-api
     working_dir: /app
     volumes:
       - ./nestjs-api:/app
@@ -8,9 +9,17 @@ services:
       - "3000:3000"
     networks:
       - app-network
-    command: ["npm", "run", "start:dev"]
+
+  db:
+    container_name: db
+    build: ./.docker/mongodb
     environment:
-      NODE_ENV: development
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - 27017:27017
+    networks:
+      - app-network
 
 networks:
   app-network:
